@@ -12,5 +12,5 @@ ImageController.setup_controller(app)
 AuthenticationController.setup_controller(app)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3335)
+    app.run(host='0.0.0.0', port=3333)
     app.run(debug=True)

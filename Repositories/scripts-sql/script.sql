@@ -33,6 +33,7 @@ CREATE TABLE Portfolio (
 	ImageId varchar(100),
     PersonId int,
     AuthenticationId VARCHAR(500),
+    IsImpressed BINARY,
     FOREIGN KEY (PersonId) REFERENCES Person(PersonId),
     FOREIGN KEY (ImageId) REFERENCES Image(ImageId),
     FOREIGN KEY (AuthenticationId) REFERENCES Authentication(AuthenticationId)
