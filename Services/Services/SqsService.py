@@ -31,7 +31,9 @@ class SqsService:
             print(f"Mensagem enviada com sucesso para {person_name} / {phone}."
                   f"ID da mensagem: {response['MessageId']}")
 
-            return AuthenticationService().set_authentication_sent(cursor, authentication_id)
+            AuthenticationService().set_authentication_sent(cursor, authentication_id)
+
+            return True
         else:
             print(f"Falha ao enviar mensagem para {person_name} / {phone}.")
             return False
