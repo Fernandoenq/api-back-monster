@@ -44,10 +44,12 @@ class ValidationService:
             result.add_error("Não autorizado")
             return result
 
+        """
         authentication = Authentication()
         if int(authentication_df[authentication.is_sent][0]) == 1:
             result.add_error("As fotos solicitadas já foram enviadas")
             return result
+        """
 
         has_image_id = ImageService().has_image_id(cursor, person_request.image_ids)
         if has_image_id is False:
