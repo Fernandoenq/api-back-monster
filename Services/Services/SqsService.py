@@ -3,6 +3,8 @@ import json
 from typing import List
 from Application.Configuration import Configuration
 from Services.Services.AuthenticationService import AuthenticationService
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
+from io import BytesIO
 
 
 class SqsService:
@@ -37,3 +39,23 @@ class SqsService:
         else:
             print(f"Falha ao enviar mensagem para {person_name} / {phone}.")
             return False
+
+    @staticmethod
+    def download_image(image_id: str):
+        s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=Configuration.aws_access_key_id,
+            aws_secret_access_key=Configuration.aws_secret_access_key,
+            region_name=Configuration.region_name
+        )
+        bucket_name = Configuration.bucket_name
+
+        try:
+            s3_client.head_object(Bucket=bucket_name, Key=image_id)
+        except ClientError as e:
+            return None
+
+        file_object = BytesIO()
+        s3_client.download_fileobj(bucket_name, image_id, file_object)
+        file_object.seek(0)
+        return file_object

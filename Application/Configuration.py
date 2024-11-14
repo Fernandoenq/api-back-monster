@@ -15,3 +15,4 @@ class Configuration:
     aws_secret_access_key = app_settings["SqsConfiguration"]["AwsSecretAccessKey"]
     region_name = app_settings["SqsConfiguration"]["RegionName"]
     sqs_queue_url = app_settings["SqsConfiguration"]["QueueUrl"]
+    bucket_name = app_settings["SqsConfiguration"]["BucketName"]

@@ -1,5 +1,5 @@
 from Services.Services.PersonService import PersonService
-from flask import jsonify, request
+from flask import jsonify, request, send_file
 import traceback
 from Services.Services.ConnectionService import ConnectionService
 from Services.Services.ValidationService import ValidationService
@@ -33,6 +33,7 @@ class PersonController:
 
                     connection.commit()
 
+                    """
                     is_sent = SqsService().send_message_to_sqs(
                         cursor, person_request.phone, person_request.person_name, person_request.image_ids,
                         person_request.authentication_id)
@@ -40,18 +41,24 @@ class PersonController:
                         return jsonify(ErrorResponseModel(
                             Errors=["Não conseguimos enviar suas fotos. "
                                     "Por favor, insira os dados e confirme novamente"]).dict()), 422
+                    """
 
-                    connection.commit()
+                    file_object = SqsService().download_image(person_request.image_ids[0])
+                    if file_object is None:
+                        return jsonify(ErrorResponseModel(
+                            Errors=["Foto indisponível"]).dict()), 422
 
-                    return jsonify(), 200
+                    return send_file(file_object, mimetype='image/png')
 
                 except Exception as e:
                     if connection.is_connected():
                         connection.rollback()
                     error_response = ErrorResponseModel(Errors=[f"{str(e)} | {traceback.format_exc()}"])
+                    print(str(e))
                     return jsonify(error_response.dict()), 500
                 finally:
                     if connection.is_connected():
                         ConnectionService.close_connection(cursor, connection)
             except Exception as e:
+                print(str(e))
                 return jsonify('Erro servidor'), 500
