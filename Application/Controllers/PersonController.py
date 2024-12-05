@@ -33,15 +33,12 @@ class PersonController:
 
                     connection.commit()
 
-                    """
                     is_sent = SqsService().send_message_to_sqs(
                         cursor, person_request.phone, person_request.person_name, person_request.image_ids,
                         person_request.authentication_id)
                     if is_sent is False:
                         return jsonify(ErrorResponseModel(
-                            Errors=["Não conseguimos enviar suas fotos. "
-                                    "Por favor, insira os dados e confirme novamente"]).dict()), 422
-                    """
+                            Errors=["Não foi possível realizar o cadastro. Tente novamente em alguns minutos"]).dict()), 422
 
                     file_object = SqsService().download_image(person_request.image_ids[0])
                     if file_object is None:
