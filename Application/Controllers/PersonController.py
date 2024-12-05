@@ -31,8 +31,6 @@ class PersonController:
                         return jsonify(ErrorResponseModel(
                             Errors=["Não foi possível realizar o cadastro. Tente novamente em alguns minutos"]).dict()), 422
 
-                    connection.commit()
-
                     is_sent = SqsService().send_message_to_sqs(
                         cursor, person_request.phone, person_request.person_name, person_request.image_ids,
                         person_request.authentication_id)
@@ -45,6 +43,7 @@ class PersonController:
                         return jsonify(ErrorResponseModel(
                             Errors=["Foto indisponível"]).dict()), 422
 
+                    connection.commit()
                     return send_file(file_object, mimetype='image/png')
 
                 except Exception as e:
